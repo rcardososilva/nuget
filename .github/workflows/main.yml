@@ -11,6 +11,7 @@ jobs:
       PATH_PROJECT: "./Nuget/Nuget.csproj"
       SOURCE_NUGET: "https://api.nuget.org/v3/index.json"
       SOURCE_GITHUB: https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json
+      USERNAME: "rcardososilva"
 
     runs-on: ubuntu-latest
 
@@ -36,6 +37,7 @@ jobs:
       run: dotnet nuget push "${{ github.workspace }}/out/*.nupkg" --api-key ${{ secrets.NUGET_TOKEN }} --source ${{ env.SOURCE_NUGET }} --skip-duplicate
 
     - name: Deploy Github Package 
+      run: dotnet nuget add source --username ${{ env.USERNAME }} --password ${{ secrets.ACCESS_GITHUB_TOKEN }} --store-password-in-clear-text --name github ${{ env.SOURCE_GITHUB }}
       run: dotnet nuget push "${{ github.workspace }}/out/*.nupkg" --api-key ${{ secrets.ACCESS_GITHUB_TOKEN }} --source ${{ env.SOURCE_GITHUB }} --skip-duplicate
             
       
