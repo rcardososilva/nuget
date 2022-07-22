@@ -10,6 +10,7 @@
     <Description>
       Biblioteca Nuget_test_rcardososilva
     </Description>  
+    <RepositoryUrl>https://github.com/rcardososilva/nuget.git</RepositoryUrl>
   </PropertyGroup>
 
 </Project>
