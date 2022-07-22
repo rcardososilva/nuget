@@ -3,13 +3,14 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <PackageId>nugetRCS</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Author>Rafael Cardoso</Author>
     <Company>PrimeUP</Company>
     <PackageTags>NuGet;.NET 5;Classlib;Github;Actions</PackageTags>
     <Description>
       Biblioteca Nuget_test_rcardososilva
     </Description>  
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/rcardososilva/nuget.git</RepositoryUrl>
   </PropertyGroup>
 

@@ -1,0 +1,5 @@
+name: Build/deploy Package Nuget
+
+on:
+  pull_request:
+    types: [opened, reopened]
