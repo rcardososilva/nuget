@@ -48,7 +48,7 @@ jobs:
           major_pattern: "break:"
           minor_pattern: "feat:"
           patch_pattern: "fix:"
-          format: "${major}.${minor}.${patch}-$PRERELEASE${increment}"
+          format: "${major}.${minor}.${patch}-${{ env.PRERELEASE }}${increment}"
           #format: "${major}.${minor}.${patch}-${{ steps.get-prerelease-suffix.outputs.prerelease_suffix }}${increment}"
   
       - name: Set up .NET Core
@@ -57,7 +57,7 @@ jobs:
           dotnet-version: '5.0.x'    
 
       - name: Build 
-        run: dotnet build ${{ env.PATH_PROJECT }} --configuration Release -p:PackageVersion=$PRERELEASE -o ${{ github.workspace }}/out
+        run: dotnet build ${{ env.PATH_PROJECT }} --configuration Release -p:PackageVersion=${{ steps.versioning.outputs.version }} -o ${{ github.workspace }}/out
 
       - name: Deploy Github Package      
         run: dotnet nuget push "${{ github.workspace }}/out/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source ${{ env.SOURCE_GITHUB }} --skip-duplicate
