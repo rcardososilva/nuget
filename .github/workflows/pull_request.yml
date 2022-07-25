@@ -35,7 +35,7 @@ jobs:
         format: "v${major}.${minor}.${patch}-prerelease${increment}"
 
     - name: Build 
-      run: dotnet build ${{ env.PATH_PROJECT }} --configuration Release
+      run: dotnet build ${{ env.PATH_PROJECT }} --configuration Release -p:PackageVersion=${{ steps.versioning.outputs.version }}
 
     # - name: Test
     #   run: dotnet test
