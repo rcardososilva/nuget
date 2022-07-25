@@ -26,7 +26,6 @@ jobs:
         id: versioning
         uses: PaulHatch/semantic-version@v4.0.2
         with:
-          branch: master
           tag_prefix: ''
           major_pattern: "break:"
           minor_pattern: "feat:"
