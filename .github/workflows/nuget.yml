@@ -13,7 +13,7 @@ env:
   USERNAME: "rcardososilva"
 
 jobs:
-  docker:
+  nuget:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
