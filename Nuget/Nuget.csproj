@@ -2,15 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>nugetRCS</Title>
     <PackageId>nugetRCS</PackageId>
-    <Version>1.0.1</Version>
     <Author>Rafael Cardoso</Author>
     <Company>PrimeUP</Company>
+    <IsPackable>true</IsPackable>
     <PackageTags>NuGet;.NET 5;Classlib;Github;Actions</PackageTags>
     <Description>
       Biblioteca Nuget_test_rcardososilva
     </Description>  
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/rcardososilva/nuget.git</RepositoryUrl>
   </PropertyGroup>
 
