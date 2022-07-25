@@ -1,0 +1,56 @@
+#Pipeline Nuget
+name: Test Semantic Version
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+
+env:
+  PATH_PROJECT: "./Nuget/Nuget.csproj"
+  SOURCE_NUGET: "https://api.nuget.org/v3/index.json"
+  SOURCE_GITHUB: https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json
+  USERNAME: "rcardososilva"
+
+jobs:
+  nuget:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          # Fetch all commits
+          fetch-depth: 0
+
+      - name: Semantic versioning
+        id: versioning
+        uses: PaulHatch/semantic-version@v4.0.2
+        with:
+          branch: master
+          tag_prefix: ''
+          major_pattern: "break:"
+          minor_pattern: "feat:"
+          patch_pattern: "fix:"
+          format: "${major}.${minor}.${patch}-prerelease${increment}"
+  
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '5.0.x'    
+
+      - name: Build 
+        run: dotnet build ${{ env.PATH_PROJECT }} --configuration Release -p:PackageVersion=${{ steps.versioning.outputs.version }} -o ${{ github.workspace }}/out
+
+      - name: Deploy Github Package      
+        run: dotnet nuget push "${{ github.workspace }}/out/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source ${{ env.SOURCE_GITHUB }} --skip-duplicate
+
+
+      - name: Create Release
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        with:
+          tag_name: ${{ steps.versioning.outputs.version }}
+          release_name: ${{ steps.versioning.outputs.version }}
+          prerelease: true      
