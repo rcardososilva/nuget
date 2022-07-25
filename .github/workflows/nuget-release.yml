@@ -32,7 +32,7 @@ jobs:
           major_pattern: "break:"
           minor_pattern: "feat:"
           patch_pattern: "fix:"
-          format: "${major}.${minor}.${patch}-prerelease${increment}"
+          format: "${major}.${minor}.${patch}-Release"
   
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v2
