@@ -1,4 +1,3 @@
-#Pipeline Nuget
 name: Test Semantic Version
 
 on:
