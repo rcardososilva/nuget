@@ -1,4 +1,3 @@
-#Pipeline Nuget
 name: Test Semantic Version
 
 on:
@@ -33,12 +32,7 @@ jobs:
           env_file = os.getenv('GITHUB_ENV')
           with open(env_file, "a") as myfile:
             myfile.write("PRERELEASE=" + suffix_array[0])
-        shell: python
-      
-      - name: Set prerelease suffix as output
-        id: get-prerelease-suffix
-        run: echo "::set-output name=prerelease_suffix::$(echo $PRERELEASE)"
-        shell: bash              
+        shell: python         
 
       - name: Semantic versioning
         id: versioning
