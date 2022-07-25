@@ -12,7 +12,7 @@ jobs:
       SOURCE_GITHUB: https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json
       USERNAME: "rcardososilva"
 
-    if: contains(github.head_ref, 'alpha') || contains(github.head_ref, 'beta') || contains(github.head_ref, 'prerelease')
+    #if: contains(github.head_ref, 'alpha') || contains(github.head_ref, 'beta') || contains(github.head_ref, 'prerelease')
     runs-on: ubuntu-latest
 
     steps:
@@ -24,11 +24,21 @@ jobs:
       with:
         dotnet-version: '5.0.x'    
 
-    - name: Build 
-      run: dotnet build ${{ env.PATH_PROJECT }} --configuration Release
+    - name: Semantic versioning
+      id: versioning
+      uses: paulhatch/semantic-version@v4.0.2
+      with:
+        tag_prefix: ''
+        major_pattern: "break:"
+        minor_pattern: "feat:"
+        patch_pattern: "fix:"
+        format: "${major}.${minor}.${patch}-prerelease${increment}"
 
-    - name: Test
-      run: dotnet test
+    - name: Build 
+      run: dotnet build ${{ env.PATH_PROJECT }} --configuration Release #-p:PackageVersion=${{ steps.versioning.outputs.version }}
+
+    # - name: Test
+    #   run: dotnet test
 
     - name: Create the Package
       run: dotnet pack ${{ env.PATH_PROJECT }} --configuration Release -o ${{ github.workspace }}/out
@@ -39,22 +49,11 @@ jobs:
     - name: Deploy Github Package      
       run: dotnet nuget push "${{ github.workspace }}/out/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source ${{ env.SOURCE_GITHUB }} --skip-duplicate
 
-    - name: Semantic Versioning
-      id: versioning
-      uses: paulhatch/semantic-version@v4.0.2
-      with:
-        tag_prefix: 'v'
-        major_pattern: "break:"
-        minor_pattern: "feat:"
-        patch_pattern: "fix:"
-        format: "v${major}.${minor}.${patch}-prerelease${increment}"         
-
     - name: Create Release
       if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: "marvinpinto/action-automatic-releases@latest"
       with:
-        tag_name: ${{ steps.versioning.outputs.version }}
-        release_name: ${{ steps.versioning.outputs.version }}
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        title: ${{ steps.versioning.outputs.version }}
+        automatic_release_tag: ${{ steps.versioning.outputs.version }}
         prerelease: true
