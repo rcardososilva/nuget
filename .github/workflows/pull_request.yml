@@ -24,21 +24,6 @@ jobs:
       with:
         dotnet-version: '5.0.x'    
 
-    - name: Build 
-      run: dotnet build ${{ env.PATH_PROJECT }} --configuration Release
-
-    - name: Test
-      run: dotnet test
-
-    - name: Create the Package
-      run: dotnet pack ${{ env.PATH_PROJECT }} --configuration Release -o ${{ github.workspace }}/out
-
-    - name: Deploy Nuget.org
-      run: dotnet nuget push "${{ github.workspace }}/out/*.nupkg" --api-key ${{ secrets.NUGET_TOKEN }} --source ${{ env.SOURCE_NUGET }} --skip-duplicate
-   
-    - name: Deploy Github Package      
-      run: dotnet nuget push "${{ github.workspace }}/out/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source ${{ env.SOURCE_GITHUB }} --skip-duplicate
-
     - name: Semantic versioning
       id: versioning
       uses: paulhatch/semantic-version@v4.0.2
@@ -49,6 +34,21 @@ jobs:
         patch_pattern: "fix:"
         format: "v${major}.${minor}.${patch}-prerelease${increment}"
 
+    - name: Build 
+      run: dotnet build ${{ env.PATH_PROJECT }} --configuration Release
+
+    # - name: Test
+    #   run: dotnet test
+
+    - name: Create the Package
+      run: dotnet pack ${{ env.PATH_PROJECT }} --configuration Release -o ${{ github.workspace }}/out
+
+    - name: Deploy Nuget.org
+      run: dotnet nuget push "${{ github.workspace }}/out/*.nupkg" --api-key ${{ secrets.NUGET_TOKEN }} --source ${{ env.SOURCE_NUGET }} --skip-duplicate
+   
+    - name: Deploy Github Package      
+      run: dotnet nuget push "${{ github.workspace }}/out/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source ${{ env.SOURCE_GITHUB }} --skip-duplicate
+
     - name: Create Release
       if: ${{ !startsWith(github.ref, 'refs/tags/') }}
       uses: "marvinpinto/action-automatic-releases@latest"
@@ -57,4 +57,4 @@ jobs:
         title: ${{ steps.versioning.outputs.version }}
         automatic_release_tag: ${{ steps.versioning.outputs.version }}
         prerelease: true
-#testebreak     
+#testebreakfeat  
