@@ -14,6 +14,7 @@ env:
 
 jobs:
   nuget:
+    if: contains(github.head_ref, 'alpha') || contains(github.head_ref, 'beta') || contains(github.head_ref, 'prerelease')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -22,16 +23,33 @@ jobs:
           # Fetch all commits
           fetch-depth: 0
 
+      - name: Find the specific suffix to compose the version format
+          run: |
+            import re
+            import os
+            github_head_ref = "${{ github.head_ref }}"
+            name_branch = github_head_ref.lower()
+            suffix_array = re.findall("alpha|beta|prerelease", name_branch)
+            env_file = os.getenv('GITHUB_ENV')
+            with open(env_file, "a") as myfile:
+              myfile.write("PRERELEASE=" + suffix_array[0])
+          shell: python
+      
+      - name: Set prerelease suffix as output
+        id: get-prerelease-suffix
+        run: echo "::set-output name=prerelease_suffix::$(echo $PRERELEASE)"
+        shell: bash              
+
       - name: Semantic versioning
         id: versioning
         uses: PaulHatch/semantic-version@v4.0.2
         with:
-          branch: master
           tag_prefix: ''
           major_pattern: "break:"
           minor_pattern: "feat:"
           patch_pattern: "fix:"
-          format: "${major}.${minor}.${patch}-prerelease${increment}"
+          #format: "${major}.${minor}.${patch}-prerelease${increment}"
+          format: "${major}.${minor}.${patch}-${{ steps.get-prerelease-suffix.outputs.prerelease_suffix }}${increment}"
   
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v2
