@@ -28,14 +28,14 @@ jobs:
       id: versioning
       uses: paulhatch/semantic-version@v4.0.2
       with:
-        tag_prefix: 'v'
+        tag_prefix: ''
         major_pattern: "break:"
         minor_pattern: "feat:"
         patch_pattern: "fix:"
-        format: "v${major}.${minor}.${patch}-prerelease${increment}"
+        format: "${major}.${minor}.${patch}-prerelease${increment}"
 
     - name: Build 
-      run: dotnet build ${{ env.PATH_PROJECT }} --configuration Release -p:PackageVersion=${{ steps.versioning.outputs.version }}
+      run: dotnet build ${{ env.PATH_PROJECT }} --configuration Release #-p:PackageVersion=${{ steps.versioning.outputs.version }}
 
     # - name: Test
     #   run: dotnet test
