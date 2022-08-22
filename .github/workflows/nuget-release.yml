@@ -37,7 +37,10 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: '5.0.x'    
+          dotnet-version: '5.0.x'   
+
+      -name: Test
+       uses: rcardososilva/github-test-unit-workflow/.github/workflows/testUnit.yml@master     
 
       - name: Build 
         run: dotnet build ${{ env.PATH_PROJECT }} --configuration Release -p:PackageVersion=${{ steps.versioning.outputs.version }} -o ${{ github.workspace }}/out
