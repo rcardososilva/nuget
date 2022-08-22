@@ -39,7 +39,7 @@ jobs:
         with:
           dotnet-version: '5.0.x'   
 
-      -name: Test
+      - name: Test
        uses: rcardososilva/github-test-unit-workflow/.github/workflows/testUnit.yml@master     
 
       - name: Build 
