@@ -41,8 +41,8 @@ jobs:
 
       - name: Unit Tests
         run: |
-          if [ $(find -maxdepth 2 -iname *.sln) ]; then
-              dotnet test */*.sln
+          if [ $(find -maxdepth 2 -iname *.slt) ]; then
+              dotnet test *.sln
           else
               dotnet test *Tests.csproj
           fi        
