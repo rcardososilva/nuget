@@ -39,8 +39,14 @@ jobs:
         with:
           dotnet-version: '5.0.x'   
 
-      - name: Test
-       uses: rcardososilva/github-test-unit-workflow/.github/workflows/testUnit.yml@master     
+      - name: Unit Tests
+        run: |
+          if [ $(find -maxdepth 2 -iname *.sln) ]; then
+              dotnet test *.sln
+          else
+              dotnet test *Tests.csproj
+          fi        
+        shell: bash   
 
       - name: Build 
         run: dotnet build ${{ env.PATH_PROJECT }} --configuration Release -p:PackageVersion=${{ steps.versioning.outputs.version }} -o ${{ github.workspace }}/out
