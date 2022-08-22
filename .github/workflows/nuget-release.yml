@@ -44,7 +44,7 @@ jobs:
           if [ $(find -maxdepth 2 -iname *.slt) ]; then
               dotnet test *.sln
           else
-              dotnet test *Tests.csproj
+              dotnet test *Tests/*.csproj
           fi        
         shell: bash   
 
